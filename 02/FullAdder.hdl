@@ -1,0 +1,15 @@
+CHIP FullAdder {
+    IN a, b, c;
+    OUT sum,
+        carry;
+
+    PARTS:
+        // "a + b" e salva carry1  
+        HalfAdder(a=a , b=b , sum=sum1 , carry=c1 );
+        // "... + c" e salva carry2
+        HalfAdder(a=sum1 , b=c , sum=sum , carry=c2 );
+        // Como se existir carry1 -> sum1=0, 
+        // logo não existiria carry2,
+        // assim carry1 ou carry2 sera 1 e nunca ambos 1
+        Or(a=c1 , b=c2 , out=carry );
+}

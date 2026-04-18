@@ -1,0 +1,44 @@
+CHIP ALU {
+    IN  
+        x[16], y[16],  // 16-bit inputs        
+        zx, // zero the x input?
+        nx, // negate the x input?
+        zy, // zero the y input?
+        ny, // negate the y input?
+        f,  // compute (out = x + y) or (out = x & y)?
+        no; // negate the out output?
+    OUT 
+        out[16], // 16-bit output
+        zr,      // if (out == 0) equals 1, else 0
+        ng;      // if (out < 0)  equals 1, else 0
+
+    PARTS:
+        // controle de zx
+        Mux16(a=x , b[0..15]=false , sel=zx , out=x1 );
+
+        // controle de nx
+        Not16(in=x1 , out=nx1 );
+        Mux16(a=x1 , b=nx1 , sel=nx , out=x2 );
+
+        // controle de zy
+        Mux16(a=y , b[0..15]=false , sel=zy , out=y1 );
+
+        // controle de nx
+        Not16(in=y1 , out=ny1 );
+        Mux16(a=y1 , b=ny1 , sel=ny , out=y2 );
+        
+        // f functions
+        And16(a=x2 , b=y2 , out=andxy );
+        Add16(a=x2 , b=y2 , out=addxy ); 
+        Mux16(a=andxy , b=addxy , sel=f , out=outpre );
+        
+        // controler de no e out correctio
+        Not16(in=outpre , out=notoutpre );
+        Mux16(a=outpre , b=notoutpre , sel=no , out[0..7]=out1 , out[8..15]=out2 , out[15]=ng );
+
+        // zr out
+        Or8Way(in=out1, out=out3);
+        Or8Way(in=out2, out=out4);
+        Or(a=out3, b=out4, out=outfinal);
+        Not(in=outfinal, out=zr); 
+}
