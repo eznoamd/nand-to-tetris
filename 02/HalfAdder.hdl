@@ -9,7 +9,7 @@ CHIP HalfAdder {
         Not(in=b , out=notb ); // !b
 
         And(a=a , b=notb , out=and1 );  // a.!b
-        And(a=nota , b=a , out=and2 );  // !a.b
+        And(a=nota , b=b , out=and2 );  // !a.b
         Or(a=and1 , b=and2 , out=sum ); // a.!b + !a.b
 
         // Carry
