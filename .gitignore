@@ -1,2 +1,4 @@
 /target
 **/target
+hdl-tst/
+asm-tst/

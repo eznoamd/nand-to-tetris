@@ -1,1 +1,0 @@
-/home/enzo/projs/nand-to-tetris/06/assembler/target/debug/assembler: /home/enzo/projs/nand-to-tetris/06/assembler/src/code.rs /home/enzo/projs/nand-to-tetris/06/assembler/src/main.rs /home/enzo/projs/nand-to-tetris/06/assembler/src/parser.rs /home/enzo/projs/nand-to-tetris/06/assembler/src/symbol_table.rs
