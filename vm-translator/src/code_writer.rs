@@ -46,7 +46,7 @@ impl CodeWriter {
             // para qualquer outro comando gera um erro de execução
             _ => unreachable!(),
             // adendo que unreachable nunca estoura exceto quando ocorre um bug
-            // pois antes ocorre filtragem do qye entra na função,
+            // pois antes ocorre filtragem do que entra na função,
             // diferente do panic que vem direto da .vm, podendo então
             // existir um erro de escrita no código
         };
