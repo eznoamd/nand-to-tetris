@@ -3,7 +3,10 @@ use crate::parser::CommandType;
 /// Responsável por traduzir comandos VM
 pub struct CodeWriter {
     file_name: String,  // nome do arquivo .vm
-    label_count: u32,   // contador usado para gerar rótulos únicos nos comandos de comparação
+    label_count: u32,   // contador usado para gerar rótulos únicos nas comparações e chamadas de funções
+    current_function: String, // função vm atualmente sendo traduzida, usado para criar labels com escopo
+                              // Exemplo: Foo.bar$LOOP
+    call_count: u32, // contador usado para gerar endereços de retorno unicos
 }
 
 impl CodeWriter {
@@ -11,8 +14,19 @@ impl CodeWriter {
         Self {
             file_name,
             label_count: 0,
+            current_function: String::new(),
+            call_count: 0,
         }
     }
+
+    /// Atualiza o nome do arquivo atualmente sendo traduzido.
+    pub fn set_file_name(&mut self, file_name: String) {
+        self.file_name = file_name;
+    }
+
+    // ========================================================
+    // PROJETO 7
+    // ========================================================
 
     /// Traduz um comando aritmético/lógico para Assembly
     pub fn write_arithmetic(&mut self, command: &str) -> String {
@@ -57,7 +71,7 @@ impl CodeWriter {
         let end_label = format!("END_{}", self.label_count);
         self.label_count += 1;
 
-        format!(
+        return format!(
             "@SP\n\
              AM=M-1\n\
              D=M\n\
@@ -82,13 +96,11 @@ impl CodeWriter {
     }
 
     /// Traduz um comando push ou pop para Assembly
-    pub fn write_push_pop(&mut self, command_type: &CommandType, segment: &str, index: i32) -> String {
+    pub fn write_push_pop(&mut self, command_type: &CommandType, segment: &str, index: i32,) -> String {
         match command_type {
-            CommandType::Push => self.write_push(segment, index), // push
-            CommandType::Pop => self.write_pop(segment, index),   // pop
-
-            // retorna erro de execução se for chamado com um comando aritmético, que não é suportado aqui
-            CommandType::Arithmetic => panic!("write_push_pop chamado com um comando aritmético"),
+            CommandType::Push => self.write_push(segment, index),
+            CommandType::Pop => self.write_pop(segment, index),
+            _ => panic!("write_push_pop recebeu um comando inválido"),
         }
     }
 
@@ -111,7 +123,7 @@ impl CodeWriter {
         };
 
         // Depois empilha o valor de D no topo da pilha e avança o Stack Pointer
-        format!("{load_d}@SP\nA=M\nM=D\n@SP\nM=M+1\n", load_d = load_d)
+        return format!("{load_d}@SP\nA=M\nM=D\n@SP\nM=M+1\n", load_d = load_d);
     }
 
     /// Traduz um comando pop, retirando o topo da pilha e guardando no índice indicado
@@ -140,6 +152,213 @@ impl CodeWriter {
 
             _ => panic!("Segmento inválido: {}", segment),
         }
+    }
+
+    // ========================================================
+    // PROJETO 8
+    // ========================================================
+
+    /// Traduz: label LOOP
+    /// para: (FuncaoAtual$LOOP)
+    pub fn write_label(&self, label: &str) -> String {
+        let label = self.scoped_label(label);
+
+        return format!("({})\n", label);
+    }
+
+    /// Traduz: goto LOOP
+    pub fn write_goto(&self, label: &str) -> String {
+        let label = self.scoped_label(label);
+
+        return format!(
+            "@{}\n\
+             0;JMP\n",
+            label
+        )
+    }
+
+    /// Traduz: if-goto LOOP
+    pub fn write_if(&self, label: &str) -> String {
+        let label = self.scoped_label(label);
+
+        return format!("@SP\nAM=M-1\nD=M\n@{}\nD;JNE\n",label)
+    }
+
+    /// Adiciona o escopo da função ao label.
+    /// Exemplo:
+    /// function Main.main 0
+    /// label LOOP
+    ///
+    /// vira: (Main.main$LOOP)
+    fn scoped_label(&self, label: &str) -> String {
+        if self.current_function.is_empty() {
+            return label.to_string()
+        } else {
+            return format!("{}${}", self.current_function, label)
+        }
+    }
+
+    /// Traduz:
+    ///
+    /// function Foo.bar 2
+    ///
+    /// criando:
+    ///
+    /// (Foo.bar)
+    /// push constant 0
+    /// push constant 0
+    pub fn write_function(&mut self, name: &str, n_vars: i32) -> String {
+        self.current_function = name.to_string();
+
+        let mut output = format!("({})\n", name);
+
+        // Cada variável local começa com 0.
+        for _ in 0..n_vars {
+            output.push_str(
+                "@0\n\
+                 D=A\n\
+                 @SP\n\
+                 A=M\n\
+                 M=D\n\
+                 @SP\n\
+                 M=M+1\n",
+            );
+        }
+
+        return output
+    }
+
+    /// Traduz:
+    ///
+    /// call Foo.bar 2
+    ///
+    /// Criando:
+    ///
+    /// - endereço de retorno
+    /// - LCL
+    /// - ARG
+    /// - THIS
+    /// - THAT
+    /// - ARG = SP - 5 - nArgs
+    /// - LCL = SP
+    /// - goto Foo.bar
+    pub fn write_call(&mut self, function_name: &str, n_args: i32) -> String {
+        let return_label = format!("RETURN_{}", self.call_count);
+
+        self.call_count += 1;
+
+        let mut output = String::new();
+
+        // push return-address
+        output.push_str(&format!("@{}\nD=A\n@SP\nA=M\nM=D\n@SP\nM=M+1\n",return_label));
+
+        // push LCL
+        output.push_str("@LCL\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n");
+
+        // push ARG
+        output.push_str("@ARG\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n");
+
+        // push THIS
+        output.push_str("@THIS\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n");
+
+        // push THAT
+        output.push_str("@THAT\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n");
+
+        // ARG = SP - 5 - nArgs
+        output.push_str(&format!("@SP\nD=M\n@5\nD=D-A\n@{}\nD=D-A\n@ARG\nM=D\n",n_args));
+
+        // LCL = SP
+        output.push_str("@SP\nD=M\n@LCL\nM=D\n",);
+
+        // goto function
+        output.push_str(&format!("@{}\n0;JMP\n({})\n",function_name,return_label));
+
+        return output
+    }
+
+    /// Traduz o comando return.
+    ///
+    /// R13 = FRAME = LCL
+    /// R14 = RET = *(FRAME - 5)
+    ///
+    /// Depois:
+    ///
+    /// *ARG = pop()
+    /// SP = ARG + 1
+    /// THAT = *(FRAME - 1)
+    /// THIS = *(FRAME - 2)
+    /// ARG  = *(FRAME - 3)
+    /// LCL  = *(FRAME - 4)
+    /// goto RET
+    pub fn write_return(&self) -> String {
+        return "\
+            @LCL
+            D=M
+            @R13
+            M=D
+
+            @5
+            A=D-A
+            D=M
+            @R14
+            M=D
+
+            @SP
+            AM=M-1
+            D=M
+            @ARG
+            A=M
+            M=D
+
+            @ARG
+            D=M+1
+            @SP
+            M=D
+
+            @R13
+            AM=M-1
+            D=M
+            @THAT
+            M=D
+
+            @R13
+            AM=M-1
+            D=M
+            @THIS
+            M=D
+
+            @R13
+            AM=M-1
+            D=M
+            @ARG
+            M=D
+
+            @R13
+            AM=M-1
+            D=M
+            @LCL
+            M=D
+
+            @R14
+            A=M
+            0;JMP"
+        .to_string()
+    }
+
+    /// Código inicial do programa:
+    ///
+    /// SP = 256
+    /// call Sys.init 0
+    pub fn write_init(&mut self) -> String {
+        let mut output = String::new();
+
+        // SP = 256
+        output.push_str("@256\nD=A\n@SP\nM=D\n",);
+
+        // call Sys.init 0
+        output.push_str(&self.write_call("Sys.init", 0));
+
+        return output
     }
 
     /// Retorna o símbolo do ponteiro base de cada segmento (local, argument, this, that)
