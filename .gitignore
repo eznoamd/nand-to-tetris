@@ -2,3 +2,4 @@
 **/target
 hdl-tst/
 asm-tst/
+tests/

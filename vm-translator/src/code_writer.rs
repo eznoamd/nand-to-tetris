@@ -33,7 +33,7 @@ impl CodeWriter {
         match command {
             // Comandos binários: consomem o topo da pilha (y o primeiro, e x o segundo),
             // deixando o resultado da operação no lugar de x
-            "add" => "@SP\nAM=M-1\nD=M\nA=A-1\nM=M+D\n".to_string(), // x + y
+            "add" => "@SP\nAM=M-1\nD=M\nA=A-1\nM=D+M\n".to_string(), // x + y
             "sub" => "@SP\nAM=M-1\nD=M\nA=A-1\nM=M-D\n".to_string(), // x - y
             "and" => "@SP\nAM=M-1\nD=M\nA=A-1\nM=D&M\n".to_string(), // x & y
             "or" => "@SP\nAM=M-1\nD=M\nA=A-1\nM=D|M\n".to_string(),  // x | y
