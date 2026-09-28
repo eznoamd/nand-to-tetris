@@ -30,7 +30,7 @@ Montador Hack escrito em Rust, que traduz .asm em .hack.
 
 **Como testar:** 
 ```bash
-cd assembler && cargo run -- tests/Pong.asm
+cd assembler && cargo run -- teste.asm
 ``` 
 e comparar o `.hack` gerado com o de referência.
 
@@ -44,7 +44,7 @@ Tradutor de bytecode VM → Assembly Hack, escrito em Rust. Os capítulos 7 e 8 
 
 **Como testar:** 
 ```bash
-cd vm-translator && cargo run -- tests/vm2-branching-and-functions/NestedCall
+cd vm-translator && cargo run -- teste.vm ou ./teste/
 ``` 
 e validar o .asm gerado no CPU Emulator com o .tst/.cmp da pasta.
 
