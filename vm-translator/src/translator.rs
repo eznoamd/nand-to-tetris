@@ -4,26 +4,27 @@ use std::path::{Path, PathBuf};
 use crate::code_writer::CodeWriter;
 use crate::parser::{clean_line, parse_command, CommandType};
 
-/// Recebe o caminho informado pelo usuário e decide
-/// se deve traduzir um arquivo .vm ou um diretório.
+/// Recebe o caminho informado pelo usuário 
+/// 
+/// Encaminha para translate_file se for um arquivo vm 
+/// Encaminha para translate_directory se for uma pasta 
 pub fn translate(input: &str) -> Result<(), String> {
     let input_path = Path::new(input);
 
-    // verifica se o caminho informado realmente existe
+    // se o arquivo/dir não existe retorna um erro
     if !input_path.exists() {
         return Err("caminho não encontrado".to_string());
     }
 
-    // se for um arquivo, traduz apenas esse arquivo
+    // se for um arquivo
     if input_path.is_file() {
         translate_file(input_path)
     }
-    // se for um diretório, procura todos os arquivos .vm
-    // e gera um único arquivo .asm
+    // se for um diretório
     else if input_path.is_dir() {
         translate_directory(input_path)
     }
-    // caso não seja nem arquivo nem diretório
+    // caso não seja nem arquivo nem diretório retorna um erro
     else {
         Err("entrada inválida".to_string())
     }
@@ -32,7 +33,7 @@ pub fn translate(input: &str) -> Result<(), String> {
 /// Traduz um único arquivo .vm
 fn translate_file(input_path: &Path) -> Result<(), String> {
 
-    // verifica se o arquivo tem ".vm" no final
+    // verifica se o arquivo tem ".vm" no final e retorna erro caso não
     if input_path.extension().and_then(|ext| ext.to_str()) != Some("vm") {
         return Err("o arquivo de entrada deve ter extensão .vm".to_string());
     }
@@ -56,14 +57,15 @@ fn translate_file(input_path: &Path) -> Result<(), String> {
     // variável que guarda todo o conteúdo do arquivo .asm
     let mut output = String::new();
 
-    // traduz cada comando do arquivo VM
+    // repassa a responsabilidade de escrever em output com o writer
+    // para o translate_content
     translate_content(
         &content,
         &mut writer,
         &mut output,
     );
 
-    // troca a extensão .vm por .asm
+    // cria o caminho do novo arquivo com a extensão .asm
     let output_path = input_path.with_extension("asm");
 
     // escreve todo o Assembly gerado no arquivo de saída
@@ -97,15 +99,13 @@ fn translate_directory(input_path: &Path) -> Result<(), String> {
         .to_string_lossy()
         .to_string();
 
-    // o arquivo .asm terá o mesmo nome da pasta
+    // O arquivo .asm terá o mesmo nome da pasta
     //
     // FunctionCalls/
     //     Main.vm
     //     Sys.vm
     //
-    // vira:
-    //
-    // FunctionCalls.asm
+    // vira: FunctionCalls.asm
     let output_path = input_path
         .parent()
         .unwrap_or(Path::new("."))
@@ -128,7 +128,6 @@ fn translate_directory(input_path: &Path) -> Result<(), String> {
     for vm_file in vm_files {
 
         // pega apenas o nome do arquivo, sem ".vm"
-        // exemplo: Main.vm -> Main
         let file_name = vm_file
             .file_stem()
             .ok_or("erro ao obter nome do arquivo")?
@@ -136,12 +135,6 @@ fn translate_directory(input_path: &Path) -> Result<(), String> {
             .to_string();
 
         // informa ao CodeWriter qual arquivo está sendo traduzido
-        //
-        // isso é importante principalmente para os comandos
-        // static, que usam o nome do arquivo:
-        //
-        // Main.0
-        // Main.1
         writer.set_file_name(file_name);
 
         // lê o conteúdo do arquivo .vm
@@ -154,8 +147,8 @@ fn translate_directory(input_path: &Path) -> Result<(), String> {
                 )
             })?;
 
-        // traduz o conteúdo desse arquivo e adiciona
-        // o Assembly gerado ao output
+        // repassa a responsabilidade de escrever em output com o writer
+        // para o translate_content
         translate_content(
             &content,
             &mut writer,
@@ -212,12 +205,8 @@ fn get_vm_files(directory: &Path) -> Vec<PathBuf> {
 
 /// Traduz o conteúdo de um arquivo VM
 /// usando o CodeWriter recebido.
-fn translate_content(
-    content: &str,
-    writer: &mut CodeWriter,
-    output: &mut String,
-) {
-    // percorre cada linha do arquivo VM
+fn translate_content(content: &str, writer: &mut CodeWriter,output: &mut String,) {
+    // para cada linha do arquivo .vm
     for line in content.lines() {
 
         // remove comentários e espaços em branco
@@ -240,7 +229,8 @@ fn translate_content(
             }
             CommandType::Push | CommandType::Pop => {
                 writer.write_push_pop(
-                    &command.command_type,
+                    &command.command_type, // centralizei os dois no mesmo, então é feito uma verificação  
+                                           // interna para encaminhar o comando pro lugar certo
                     &command.arg1,
                     command.arg2.expect("push/pop sem índice"),
                 )

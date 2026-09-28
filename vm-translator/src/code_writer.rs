@@ -167,29 +167,41 @@ impl CodeWriter {
     }
 
     /// Traduz: goto LOOP
+    /// para: @FuncaoAtual$LOOP
+    ///       0;JMP
     pub fn write_goto(&self, label: &str) -> String {
         let label = self.scoped_label(label);
 
-        return format!(
-            "@{}\n\
-             0;JMP\n",
+        return format!("\
+            @{}
+            0;JMP",
             label
         )
     }
 
     /// Traduz: if-goto LOOP
+    /// para: @SP
+    ///       AM=M-1
+    ///       D=M
+    ///       @FuncaoAtual$LOOP
+    ///       D;JNE
     pub fn write_if(&self, label: &str) -> String {
         let label = self.scoped_label(label);
 
-        return format!("@SP\nAM=M-1\nD=M\n@{}\nD;JNE\n",label)
+        return format!("\
+            @SP
+            AM=M-1
+            D=M
+            @{}
+            D;JNE",
+        label)
     }
 
     /// Adiciona o escopo da função ao label.
-    /// Exemplo:
-    /// function Main.main 0
-    /// label LOOP
+    /// Exemplo: function Main.main 0
+    ///          label LOOP
     ///
-    /// vira: (Main.main$LOOP)
+    /// vira:    (Main.main$LOOP)
     fn scoped_label(&self, label: &str) -> String {
         if self.current_function.is_empty() {
             return label.to_string()
@@ -198,15 +210,11 @@ impl CodeWriter {
         }
     }
 
-    /// Traduz:
+    /// Traduz: function Foo.bar 2
     ///
-    /// function Foo.bar 2
-    ///
-    /// criando:
-    ///
-    /// (Foo.bar)
-    /// push constant 0
-    /// push constant 0
+    /// para: (Foo.bar)
+    ///       push constant 0
+    ///       push constant 0 ... 
     pub fn write_function(&mut self, name: &str, n_vars: i32) -> String {
         self.current_function = name.to_string();
 
@@ -228,60 +236,115 @@ impl CodeWriter {
         return output
     }
 
-    /// Traduz:
+    /// Traduz: call Foo.bar 2
     ///
-    /// call Foo.bar 2
+    /// para:
     ///
-    /// Criando:
-    ///
-    /// - endereço de retorno
-    /// - LCL
-    /// - ARG
-    /// - THIS
-    /// - THAT
-    /// - ARG = SP - 5 - nArgs
-    /// - LCL = SP
-    /// - goto Foo.bar
+    /// [1] endereço de retorno
+    /// [2] LCL
+    /// [3] ARG
+    /// [4] THIS
+    /// [5] THAT
+    /// [6] ARG = SP - 5 - nArgs
+    /// [7] LCL = SP
+    /// [8] goto Foo.bar
     pub fn write_call(&mut self, function_name: &str, n_args: i32) -> String {
         let return_label = format!("RETURN_{}", self.call_count);
-
         self.call_count += 1;
 
         let mut output = String::new();
 
         // push return-address
-        output.push_str(&format!("@{}\nD=A\n@SP\nA=M\nM=D\n@SP\nM=M+1\n",return_label));
+        output.push_str(&format!("\
+            @{}
+            D=A
+            @SP
+            A=M
+            M=D
+            @SP
+            M=M+1",
+            return_label
+        ));
 
         // push LCL
-        output.push_str("@LCL\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n");
+        output.push_str("\
+            @LCL
+            D=M
+            @SP
+            A=M
+            M=D
+            @SP
+            M=M+1"
+        );
 
         // push ARG
-        output.push_str("@ARG\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n");
+        output.push_str("\
+            @ARG
+            D=M
+            @SP
+            A=M
+            M=D
+            @SP
+            M=M+1"
+        );
 
         // push THIS
-        output.push_str("@THIS\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n");
+        output.push_str("\
+            @THIS
+            D=M
+            @SP
+            A=M
+            M=D
+            @SP
+            M=M+1"
+        );
 
         // push THAT
-        output.push_str("@THAT\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n");
+        output.push_str("\
+            @THAT
+            D=M
+            @SP
+            A=M
+            M=D
+            @SP
+            M=M+1"
+        );
 
         // ARG = SP - 5 - nArgs
-        output.push_str(&format!("@SP\nD=M\n@5\nD=D-A\n@{}\nD=D-A\n@ARG\nM=D\n",n_args));
+        output.push_str(&format!("\
+            @SP
+            D=M
+            @5
+            D=D-A
+            @{}
+            D=D-A
+            @ARG
+            M=D\n", n_args));
 
         // LCL = SP
-        output.push_str("@SP\nD=M\n@LCL\nM=D\n",);
+        output.push_str("\
+            @SP
+            D=M
+            @LCL
+            M=D\n");
 
         // goto function
-        output.push_str(&format!("@{}\n0;JMP\n({})\n",function_name,return_label));
+        output.push_str(&format!("\
+            @{}
+            0;JMP
+            ({})
+            \n", 
+            function_name, 
+            return_label
+        ));
 
         return output
     }
 
     /// Traduz o comando return.
     ///
-    /// R13 = FRAME = LCL
-    /// R14 = RET = *(FRAME - 5)
-    ///
-    /// Depois:
+    /// R13 = LCL           :(FRAME)
+    /// R14 = *(FRAME - 5)  :(RET)
     ///
     /// *ARG = pop()
     /// SP = ARG + 1
@@ -296,49 +359,41 @@ impl CodeWriter {
             D=M
             @R13
             M=D
-
             @5
             A=D-A
             D=M
             @R14
             M=D
-
             @SP
             AM=M-1
             D=M
             @ARG
             A=M
             M=D
-
             @ARG
             D=M+1
             @SP
             M=D
-
             @R13
             AM=M-1
             D=M
             @THAT
             M=D
-
             @R13
             AM=M-1
             D=M
             @THIS
             M=D
-
             @R13
             AM=M-1
             D=M
             @ARG
             M=D
-
             @R13
             AM=M-1
             D=M
             @LCL
             M=D
-
             @R14
             A=M
             0;JMP"
@@ -353,13 +408,21 @@ impl CodeWriter {
         let mut output = String::new();
 
         // SP = 256
-        output.push_str("@256\nD=A\n@SP\nM=D\n",);
+        output.push_str("\
+            @256
+            D=A
+            @SP
+            M=D\n");
 
         // call Sys.init 0
-        output.push_str(&self.write_call("Sys.init", 0));
+        output.push_str(
+            &self.write_call("Sys.init", 0)
+        );
 
         return output
     }
+
+    // FUNÇÕES AUXILIARES
 
     /// Retorna o símbolo do ponteiro base de cada segmento (local, argument, this, that)
     fn segment_pointer(segment: &str) -> &'static str {
