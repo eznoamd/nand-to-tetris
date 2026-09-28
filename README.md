@@ -26,7 +26,6 @@ Chips descritos em HDL. Cada subpasta de capítulo guarda os .hdl/.asm na raiz e
 Montador Hack escrito em Rust, que traduz .asm em .hack.
 
 - `assembler/src` — código-fonte (Cargo/Rust)
-- `assembler/tests` — programas de exemplo (Add, Max, Pong, Rect, incluindo as versões com símbolos L) usados para validar a saída do montador
 
 **Como testar:** 
 ```bash
@@ -39,8 +38,6 @@ e comparar o `.hack` gerado com o de referência.
 Tradutor de bytecode VM → Assembly Hack, escrito em Rust. Os capítulos 7 e 8 do curso são a mesma ferramenta evoluindo em dois estágios, por isso vivem no mesmo projeto em vez de pastas separadas:
 
 - `vm-translator/src` — código-fonte (parser + code writer)
-- `vm-translator/tests/vm1-stack-and-memory` — estágio 1: operações aritméticas/lógicas e acesso à memória (BasicTest, PointerTest, SimpleAdd, StackTest, StaticTest)
-- `vm-translator/tests/vm2-branching-and-functions` — estágio 2: branching e chamadas de função (BasicLoop, FibonacciElement, FibonacciSeries, NestedCall, SimpleFunction, StaticsTest)
 
 **Como testar:** 
 ```bash
