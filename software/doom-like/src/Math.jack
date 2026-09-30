@@ -132,6 +132,106 @@ class Math {
         return Math.sin(angle + 90);
     }
 
+    function int fixedMul(int aFixed, int bFixed) {
+        // o comum seria: 
+        // a/256 * b/256 = (a * b)/256*256
+        //
+        // como queremos na base Fixed:
+        // 256 * (a/256 * b/256) = (a * b)/256
+        return Math.divide(aFixed * bFixed, 256);
+    }
+
+    // comum: a / b
+    // fixed: 
+    //      partInt = a / b
+    //      resto = a - b * partInt
+    //
+    //      8x:
+    //          dobra o resto
+    //          verifica se é maior que b 
+    //          adiciona na partFrac e dobra o que ja tinhamos dela 
+    //          (equivalente a adicionar um bit 1)
+    //          se não só dobra a partFrac
+    //          (equivalente a adicionar um bit 0)
+    //
+    //      valor final = fratFrac + partInt * 256
+    // 
+    // a escolha pra esse algoritimo se deve ao fato que 
+    // fazer (a * 256)/b diretamente poderia ocorrer um 
+    // overflow na aproximação decimal
+    function int fixedDiv(int aFixed, int bFixed) {
+        var boolean negative;
+        var int a;
+        var int b;
+        var int integerPart;
+        var int remainder;
+        var int fraction;
+        var int i;
+
+        if (bFixed = 0) { return 0; }
+
+        let negative = false;
+
+        // guarda se 'a' é negativo
+        if (aFixed < 0) {
+            let a = -aFixed;
+            let negative = true;
+        }else {
+            let a = aFixed;
+        }
+
+        // guarda se o valor final é negativo dependendo do
+        // sinal de 'b' e o sinal guardado de 'a'
+        if (bFixed < 0) {
+            let b = -bFixed;
+
+            if (negative) {
+                let negative = false;
+            }
+            else {
+                let negative = true;
+            }
+        }
+        else {
+            let b = bFixed;
+        }
+
+        // guardo a parte inteira da divisão
+        let integerPart = Math.divide(a, b);
+        // o quanto ainda sobrou de parte fracionaria 
+        let remainder = a - (integerPart * b);
+
+        let fraction = 0;
+        let i = 0;
+
+        while (i < 8) {
+            // dobra o resto
+            let remainder = remainder * 2;
+
+            if (~(remainder < b)) {
+                // subtrai do divisor
+                let remainder = remainder - b;
+                // adiciona bit 1 dobrando o que temos até agora de parte frac 
+                let fraction = (fraction * 2) + 1;
+            }
+            else {
+                // adiciona bit 0 dobrando o que temos até agora de parte frac
+                let fraction = fraction * 2;
+            }
+
+            let i = i + 1;
+        }
+
+        // Converte para Q8.8
+        let a = (integerPart * 256) + fraction;
+
+        if (negative) {
+            return -a;
+        }
+        return a;
+    }
+
+
     function int mod(int x, int y) {
         // x - ((x/y) * y)
         // 

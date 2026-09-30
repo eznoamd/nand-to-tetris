@@ -1,2 +1,113 @@
 class Player {
+    // lembrando que Fixed = Q8.8 (fp)
+    field int xFixed;
+    field int yFixed;
+    field int angle;
+    field int velocityFixed;
+    field int velRot;
+    field Map map;
+
+    constructor Player new(Map nmap) {
+        let map = nmap;
+
+        let xFixed = map.getPlayerStartX() * 256;
+        let yFixed = map.getPlayerStartY() * 256;
+        let angle = 270;
+        let velocityFixed = 64;
+        let velRot = 10;
+
+        return this;
+    }
+
+    // aqui centraliza todos os movimentos possiveis para o player, 
+    // dependendo apenas do angulo de direção
+    method void move(int directionAngle) {
+        var int dxFixed;
+        var int dyFixed;
+        var int newXFixed;
+        var int newYFixed;
+
+        // normaliza o angulo
+        let directionAngle = Math.mod(directionAngle, 360);
+
+        // apenas a variação aplicada no eixo x
+        // cos(angle) * vel
+        // como ambos são em Fixed uso Math.fixed
+        let dxFixed = Math.fixedMul(
+            Math.cos(directionAngle),
+            velocityFixed
+        );
+
+        // mesma coisa que o de cima porém
+        // sin(angle) * vel
+        let dyFixed = Math.fixedMul(
+            Math.sin(directionAngle),
+            velocityFixed
+        );
+
+        let newXFixed = xFixed + dxFixed;
+        let newYFixed = yFixed + dyFixed;
+
+        // se não é parede a nova posição
+        // efetua o movimento
+        if (~map.isWall(newXFixed / 256, yFixed / 256)) {
+            let xFixed = newXFixed;
+        }
+        if (~map.isWall(xFixed / 256, newYFixed / 256)) {
+            let yFixed = newYFixed;
+        }
+        return;
+    }
+
+    method void moveForward() {
+        do move(angle);
+        return;
+    }
+
+   method void moveBackward() {
+        do move(angle + 180);
+        return;
+    }
+
+    method void moveLeft() {
+        do move(angle - 90);
+        return;
+    }
+
+    method void moveRight() {
+        do move(angle + 90);
+        return;
+    }
+
+    method void rotateLeft() {
+        let angle = angle - velRot;
+
+        if (angle < 0) {
+            let angle = angle + 360;
+        }
+
+        return;
+    }
+
+    method void rotateRight() {
+        let angle = angle + velRot;
+
+        if (angle > 359) {
+            let angle = angle - 360;
+        }
+
+        return;
+    }
+
+    method int getXFixed() {
+        return xFixed;
+    }
+
+    method int getYFixed() {
+        return yFixed;
+    }
+
+    method int getAngle() {
+        return angle;
+    }
 }

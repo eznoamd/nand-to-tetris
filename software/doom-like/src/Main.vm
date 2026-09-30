@@ -1,21 +1,10 @@
-function Main.main 0
+function Main.main 1
     call Math.init 0
     pop temp 0
-    push constant 0
-    call Math.sin 1
-    call Output.printInt 1
-    pop temp 0
-    push constant 90
-    call Math.sin 1
-    call Output.printInt 1
-    pop temp 0
-    push constant 180
-    call Math.sin 1
-    call Output.printInt 1
-    pop temp 0
-    push constant 0
-    call Math.cos 1
-    call Output.printInt 1
+    call Game.new 0
+    pop local 0
+    push local 0
+    call Game.run 1
     pop temp 0
     push constant 0
     return

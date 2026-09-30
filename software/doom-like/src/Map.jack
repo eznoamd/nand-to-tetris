@@ -2,10 +2,128 @@ class Map {
     field Array data;
     field int width;
     field int height;
+    field int playerStartX;
+    field int playerStartY;
 
     constructor Map new() {
-
+        // Voce pode obter um mapa personalizado com base no ~/pre-process/map.txt,
+        // basta modificar o arquivo como voce quer o mapa, 
+        // 1 = parede, 0 = vazio, 2 = pos de nascimento (player nasce olhando para cima)
+        // não faça width diferente nas linhas, masntenha todas com o mesmo tamanho
+        // depois basta executar ~/pre-process/map.py e colar aqui em baixo o código de retorno
+        let width = 10;
+        let height = 6;
+        let data = Array.new(60);
+        let data[0] = 1;
+        let data[1] = 1;
+        let data[2] = 1;
+        let data[3] = 1;
+        let data[4] = 1;
+        let data[5] = 1;
+        let data[6] = 1;
+        let data[7] = 1;
+        let data[8] = 1;
+        let data[9] = 1;
+        let data[10] = 1;
+        let data[11] = 0;
+        let data[12] = 0;
+        let data[13] = 0;
+        let data[14] = 0;
+        let data[15] = 0;
+        let data[16] = 0;
+        let data[17] = 0;
+        let data[18] = 0;
+        let data[19] = 1;
+        let data[20] = 1;
+        let data[21] = 0;
+        let data[22] = 0;
+        let data[23] = 0;
+        let data[24] = 0;
+        let data[25] = 0;
+        let data[26] = 0;
+        let data[27] = 0;
+        let data[28] = 0;
+        let data[29] = 1;
+        let data[30] = 1;
+        let data[31] = 0;
+        let data[32] = 0;
+        let data[33] = 0;
+        let data[34] = 1;
+        let data[35] = 1;
+        let data[36] = 1;
+        let data[37] = 0;
+        let data[38] = 0;
+        let data[39] = 1;
+        let data[40] = 1;
+        let data[41] = 0;
+        let data[42] = 0;
+        let data[43] = 0;
+        let data[44] = 0;
+        let data[45] = 0;
+        let data[46] = 0;
+        let data[47] = 0;
+        let data[48] = 0;
+        let data[49] = 1;
+        let data[50] = 1;
+        let data[51] = 1;
+        let data[52] = 1;
+        let data[53] = 1;
+        let data[54] = 1;
+        let data[55] = 1;
+        let data[56] = 1;
+        let data[57] = 1;
+        let data[58] = 1;
+        let data[59] = 1;
+        let playerStartX = 4;
+        let playerStartY = 2;
+        return this;
     }
 
-    
+    method int get(int x, int y) {
+        return data[(y * width) + x];
+    }
+
+    method boolean isInside(int x, int y) {
+        if (x < 0) {
+            return false;
+        }
+        
+        if (~(x < width)) { // ~(a<b) é a>=b
+            return false;
+        }
+
+        if (y < 0) {
+            return false;
+        }
+
+        if (~(y < height)) { // ~(a<b) é a>=b
+            return false;
+        }
+
+        return true;
+    }
+
+    method boolean isWall(int x, int y) {
+        if (x < 0 | ~(x < width) | y < 0 | ~(y < height)) {
+            return true;
+        }
+
+        return ~(get(x, y) = 0);
+    }
+
+    method int getWidth() {
+        return width;
+    }
+
+    method int getHeight() {
+        return height;
+    }
+
+    method int getPlayerStartX() {
+        return playerStartX;
+    }
+
+    method int getPlayerStartY() {
+        return playerStartY;
+    }
 }

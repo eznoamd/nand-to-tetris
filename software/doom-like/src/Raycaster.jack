@@ -1,2 +1,122 @@
 class Raycaster {
+    field Map map;
+
+    constructor Raycaster new(Map nmap) {
+        let map = nmap;
+        return this;
+    }
+
+    method int castRay(int pxFixed, int pyFixed, int angle) {
+        var int rayXFixed;
+        var int rayYFixed;
+        var int mapX;
+        var int mapY;
+        var int deltaXFixed;
+        var int deltaYFixed;
+        var int stepX;
+        var int stepY;
+        var int sideDistX;
+        var int sideDistY;
+        var boolean hit;
+        var int side;
+        var int perpWallDist;
+
+        let rayXFixed = Math.cos(angle);
+        let rayYFixed = Math.sin(angle);
+
+        let mapX = pxFixed / 256;
+        let mapY = pyFixed / 256;
+
+        // Distância necessária para atravessar
+        // uma célula no eixo X/Y.
+        if (rayXFixed = 0) {
+            let deltaXFixed = 32767;
+        } else {
+            let deltaXFixed = Math.abs(Math.fixedDiv(256, rayXFixed));
+        }
+
+        if (rayYFixed = 0) {
+            let deltaYFixed = 32767;
+        } else {
+            let deltaYFixed = Math.abs(Math.fixedDiv(256, rayYFixed));
+        }
+
+        // Direção X
+        if (rayXFixed = 0) {
+            let stepX = 0;
+            let sideDistX = 32767;
+        } else {
+
+            if (rayXFixed < 0) {
+                let stepX = -1;
+
+                let sideDistX = Math.fixedDiv(
+                    pxFixed - (mapX * 256),
+                    Math.abs(rayXFixed)
+                );
+
+            } else {
+                let stepX = 1;
+
+                let sideDistX = Math.fixedDiv(
+                    ((mapX + 1) * 256) - pxFixed,
+                    Math.abs(rayXFixed)
+                );
+            }
+}
+
+        // Direção Y
+        if (rayYFixed = 0) {
+
+            let stepY = 0;
+            let sideDistY = 32767;
+
+        } else {
+
+            if (rayYFixed < 0) {
+                let stepY = -1;
+
+                let sideDistY = Math.fixedDiv(
+                    pyFixed - (mapY * 256),
+                    Math.abs(rayYFixed)
+                );
+
+            } else {
+                let stepY = 1;
+
+                let sideDistY = Math.fixedDiv(
+                    ((mapY + 1) * 256) - pyFixed,
+                    Math.abs(rayYFixed)
+                );
+            }
+        }
+
+        let hit = false;
+        let side = 0;
+
+        while (~hit) {
+
+            if (sideDistX < sideDistY) {
+                let sideDistX = sideDistX + deltaXFixed;
+                let mapX = mapX + stepX;
+                let side = 0;
+            } else {
+                let sideDistY = sideDistY + deltaYFixed;
+                let mapY = mapY + stepY;
+                let side = 1;
+            }
+
+            if (map.isWall(mapX, mapY)) {
+                let hit = true;
+            }
+        }
+
+        if (side = 0) {
+            let perpWallDist = sideDistX - deltaXFixed;
+        } else {
+            let perpWallDist = sideDistY - deltaYFixed;
+        }
+
+        return perpWallDist;
+    }
 }

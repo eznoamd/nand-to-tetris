@@ -799,6 +799,136 @@ function Math.cos 0
     add
     call Math.sin 1
     return
+function Math.fixedMul 0
+    push argument 0
+    push argument 1
+    call Math.multiply 2
+    push constant 256
+    call Math.divide 2
+    return
+function Math.fixedDiv 7
+    push argument 1
+    push constant 0
+    eq
+    not
+    if-goto Math_7
+    push constant 0
+    return
+    goto Math_6
+label Math_7
+label Math_6
+    push constant 0
+    pop local 0
+    push argument 0
+    push constant 0
+    lt
+    not
+    if-goto Math_9
+    push argument 0
+    neg
+    pop local 1
+    push constant 1
+    neg
+    pop local 0
+    goto Math_8
+label Math_9
+    push argument 0
+    pop local 1
+label Math_8
+    push argument 1
+    push constant 0
+    lt
+    not
+    if-goto Math_11
+    push argument 1
+    neg
+    pop local 2
+    push local 0
+    not
+    if-goto Math_13
+    push constant 0
+    pop local 0
+    goto Math_12
+label Math_13
+    push constant 1
+    neg
+    pop local 0
+label Math_12
+    goto Math_10
+label Math_11
+    push argument 1
+    pop local 2
+label Math_10
+    push local 1
+    push local 2
+    call Math.divide 2
+    pop local 3
+    push local 1
+    push local 3
+    push local 2
+    call Math.multiply 2
+    sub
+    pop local 4
+    push constant 0
+    pop local 5
+    push constant 0
+    pop local 6
+label Math_14
+    push local 6
+    push constant 8
+    lt
+    not
+    if-goto Math_15
+    push local 4
+    push constant 2
+    call Math.multiply 2
+    pop local 4
+    push local 4
+    push local 2
+    lt
+    not
+    not
+    if-goto Math_17
+    push local 4
+    push local 2
+    sub
+    pop local 4
+    push local 5
+    push constant 2
+    call Math.multiply 2
+    push constant 1
+    add
+    pop local 5
+    goto Math_16
+label Math_17
+    push local 5
+    push constant 2
+    call Math.multiply 2
+    pop local 5
+label Math_16
+    push local 6
+    push constant 1
+    add
+    pop local 6
+    goto Math_14
+label Math_15
+    push local 3
+    push constant 256
+    call Math.multiply 2
+    push local 5
+    add
+    pop local 1
+    push local 0
+    not
+    if-goto Math_19
+    push local 1
+    neg
+    return
+    goto Math_18
+label Math_19
+label Math_18
+    push local 1
+    return
 function Math.mod 0
     push argument 0
     push argument 0

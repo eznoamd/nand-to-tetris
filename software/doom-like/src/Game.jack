@@ -1,2 +1,86 @@
 class Game {
+
+    field Map map;
+    field Player player;
+    field Raycaster raycaster;
+    field Renderer renderer;
+    field boolean changed;
+
+    field boolean running;
+
+    constructor Game new() {
+        let map = Map.new();
+        let player = Player.new(map);
+        let raycaster = Raycaster.new(map);
+        let renderer = Renderer.new(raycaster);
+        let running = true;
+
+        return this;
+    }
+
+    method void run() {
+        var boolean changed;
+        do render();
+        while (running) {
+            let changed = update();
+            if (changed) {
+                do render();
+            }
+
+            do Sys.wait(30);
+        }
+
+        return;
+    }
+
+
+    method boolean update() {
+        var int key;
+
+        let key = Keyboard.keyPressed();
+        let changed = false;
+
+        if (key = 119) {
+            do player.moveForward();
+            let changed = true;
+        }
+
+        if (key = 115) {
+            do player.moveBackward();
+            let changed = true;
+        }
+
+        if (key = 97) {
+            do player.moveLeft();
+            let changed = true;
+        }
+
+        if (key = 100) {
+            do player.moveRight();
+            let changed = true;
+        }
+
+        if (key = 130) {
+            do player.rotateLeft();
+            let changed = true;
+        }
+
+        if (key = 132) {
+            do player.rotateRight();
+            let changed = true;
+        }
+
+        if (key = 27) {
+            let running = false;
+        }
+
+        return changed;
+    }
+
+
+    method void render() {
+        do renderer.render(player);
+        return;
+    }
+
 }

@@ -1,2 +1,102 @@
 class Renderer {
+
+    field Raycaster raycaster;
+    field int FOV;
+
+    constructor Renderer new(Raycaster nraycaster) {
+        let raycaster = nraycaster;
+        let FOV = 64;
+        return this;
+    }
+
+
+    method void render(Player player) {
+        var int ray;
+        var int rayAngle;
+        var int distanceFixed;
+        var int wallHeight;
+
+        var int x;
+        var int top;
+        var int bottom;
+
+        let ray = 0;
+
+        do Screen.clearScreen();
+        do Screen.setColor(true);
+
+        while (ray < FOV) {
+
+            // FOV = 64 graus
+            //
+            // raio 0  = playerAngle - 32
+            // raio 32 = playerAngle
+            // raio 63 = playerAngle + 31
+
+            let rayAngle = (player.getAngle() - (FOV/2)) + ray;
+
+            // Normaliza o ângulo para 0..359
+            if (rayAngle < 0) {
+                let rayAngle = rayAngle + 360;
+            }
+
+            if (~(rayAngle < 360)) {
+                let rayAngle = rayAngle - 360;
+            }
+
+            // Faz o raycast
+            let distanceFixed = raycaster.castRay(
+                player.getXFixed(),
+                player.getYFixed(),
+                rayAngle
+            );
+
+            // Evita divisão por zero
+            if (distanceFixed < 1) {
+                let distanceFixed = 1;
+            }
+
+            // Quanto menor a distância,
+            // maior a parede.
+            //
+            // 25600 / distância
+            //
+            // 25600 é apenas uma escala visual.
+            let wallHeight = Math.divide(
+                25600,
+                distanceFixed
+            );
+
+            // Limita à altura da tela
+            if (wallHeight > 256) {
+                let wallHeight = 256;
+            }
+
+            // Centro vertical da tela = 128
+            let top = 128 - (wallHeight / 2);
+            let bottom = 128 + (wallHeight / 2);
+
+            if (top < 0) {
+                let top = 0;
+            }
+
+            if (bottom > 255) {
+                let bottom = 255;
+            }
+
+            // Cada raio ocupa 8 pixels
+            let x = ray * 8;
+
+            do Screen.drawRectangle(
+                x,
+                top,
+                x + 7,
+                bottom
+            );
+
+            let ray = ray + 1;
+        }
+
+        return;
+    }
 }
