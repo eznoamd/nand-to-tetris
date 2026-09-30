@@ -343,8 +343,8 @@ impl CodeWriter {
 
     /// Traduz o comando return.
     ///
-    /// R13 = LCL           :(FRAME)
-    /// R14 = *(FRAME - 5)  :(RET)
+    /// R13 = LCL           |(FRAME)
+    /// R14 = *(FRAME - 5)  |(RET)
     ///
     /// *ARG = pop()
     /// SP = ARG + 1

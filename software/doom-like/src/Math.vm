@@ -1,0 +1,810 @@
+function Math.init 0
+    push constant 91
+    call Array.new 1
+    pop static 0
+    push constant 0
+    push static 0
+    add
+    push constant 0
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 1
+    push static 0
+    add
+    push constant 4
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 2
+    push static 0
+    add
+    push constant 9
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 3
+    push static 0
+    add
+    push constant 13
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 4
+    push static 0
+    add
+    push constant 18
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 5
+    push static 0
+    add
+    push constant 22
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 6
+    push static 0
+    add
+    push constant 27
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 7
+    push static 0
+    add
+    push constant 31
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 8
+    push static 0
+    add
+    push constant 36
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 9
+    push static 0
+    add
+    push constant 40
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 10
+    push static 0
+    add
+    push constant 44
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 11
+    push static 0
+    add
+    push constant 49
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 12
+    push static 0
+    add
+    push constant 53
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 13
+    push static 0
+    add
+    push constant 58
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 14
+    push static 0
+    add
+    push constant 62
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 15
+    push static 0
+    add
+    push constant 66
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 16
+    push static 0
+    add
+    push constant 71
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 17
+    push static 0
+    add
+    push constant 75
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 18
+    push static 0
+    add
+    push constant 79
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 19
+    push static 0
+    add
+    push constant 83
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 20
+    push static 0
+    add
+    push constant 88
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 21
+    push static 0
+    add
+    push constant 92
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 22
+    push static 0
+    add
+    push constant 96
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 23
+    push static 0
+    add
+    push constant 100
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 24
+    push static 0
+    add
+    push constant 104
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 25
+    push static 0
+    add
+    push constant 108
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 26
+    push static 0
+    add
+    push constant 112
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 27
+    push static 0
+    add
+    push constant 116
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 28
+    push static 0
+    add
+    push constant 120
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 29
+    push static 0
+    add
+    push constant 124
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 30
+    push static 0
+    add
+    push constant 128
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 31
+    push static 0
+    add
+    push constant 132
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 32
+    push static 0
+    add
+    push constant 136
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 33
+    push static 0
+    add
+    push constant 139
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 34
+    push static 0
+    add
+    push constant 143
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 35
+    push static 0
+    add
+    push constant 147
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 36
+    push static 0
+    add
+    push constant 150
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 37
+    push static 0
+    add
+    push constant 154
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 38
+    push static 0
+    add
+    push constant 158
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 39
+    push static 0
+    add
+    push constant 161
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 40
+    push static 0
+    add
+    push constant 165
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 41
+    push static 0
+    add
+    push constant 168
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 42
+    push static 0
+    add
+    push constant 171
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 43
+    push static 0
+    add
+    push constant 175
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 44
+    push static 0
+    add
+    push constant 178
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 45
+    push static 0
+    add
+    push constant 181
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 46
+    push static 0
+    add
+    push constant 184
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 47
+    push static 0
+    add
+    push constant 187
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 48
+    push static 0
+    add
+    push constant 190
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 49
+    push static 0
+    add
+    push constant 193
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 50
+    push static 0
+    add
+    push constant 196
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 51
+    push static 0
+    add
+    push constant 199
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 52
+    push static 0
+    add
+    push constant 202
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 53
+    push static 0
+    add
+    push constant 204
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 54
+    push static 0
+    add
+    push constant 207
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 55
+    push static 0
+    add
+    push constant 210
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 56
+    push static 0
+    add
+    push constant 212
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 57
+    push static 0
+    add
+    push constant 215
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 58
+    push static 0
+    add
+    push constant 217
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 59
+    push static 0
+    add
+    push constant 219
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 60
+    push static 0
+    add
+    push constant 222
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 61
+    push static 0
+    add
+    push constant 224
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 62
+    push static 0
+    add
+    push constant 226
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 63
+    push static 0
+    add
+    push constant 228
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 64
+    push static 0
+    add
+    push constant 230
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 65
+    push static 0
+    add
+    push constant 232
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 66
+    push static 0
+    add
+    push constant 234
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 67
+    push static 0
+    add
+    push constant 236
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 68
+    push static 0
+    add
+    push constant 237
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 69
+    push static 0
+    add
+    push constant 239
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 70
+    push static 0
+    add
+    push constant 241
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 71
+    push static 0
+    add
+    push constant 242
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 72
+    push static 0
+    add
+    push constant 243
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 73
+    push static 0
+    add
+    push constant 245
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 74
+    push static 0
+    add
+    push constant 246
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 75
+    push static 0
+    add
+    push constant 247
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 76
+    push static 0
+    add
+    push constant 248
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 77
+    push static 0
+    add
+    push constant 249
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 78
+    push static 0
+    add
+    push constant 250
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 79
+    push static 0
+    add
+    push constant 251
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 80
+    push static 0
+    add
+    push constant 252
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 81
+    push static 0
+    add
+    push constant 253
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 82
+    push static 0
+    add
+    push constant 254
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 83
+    push static 0
+    add
+    push constant 254
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 84
+    push static 0
+    add
+    push constant 255
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 85
+    push static 0
+    add
+    push constant 255
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 86
+    push static 0
+    add
+    push constant 255
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 87
+    push static 0
+    add
+    push constant 256
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 88
+    push static 0
+    add
+    push constant 256
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 89
+    push static 0
+    add
+    push constant 256
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 90
+    push static 0
+    add
+    push constant 256
+    pop temp 0
+    pop pointer 1
+    push temp 0
+    pop that 0
+    push constant 0
+    return
+function Math.sin 2
+    push argument 0
+    push constant 360
+    call Math.mod 2
+    pop argument 0
+    push argument 0
+    push constant 90
+    lt
+    not
+    if-goto Math_1
+    push argument 0
+    push static 0
+    add
+    pop pointer 1
+    push that 0
+    return
+    goto Math_0
+label Math_1
+label Math_0
+    push argument 0
+    push constant 180
+    lt
+    not
+    if-goto Math_3
+    push constant 180
+    push argument 0
+    sub
+    push static 0
+    add
+    pop pointer 1
+    push that 0
+    return
+    goto Math_2
+label Math_3
+label Math_2
+    push argument 0
+    push constant 270
+    lt
+    not
+    if-goto Math_5
+    push argument 0
+    push constant 180
+    sub
+    push static 0
+    add
+    pop pointer 1
+    push that 0
+    neg
+    return
+    goto Math_4
+label Math_5
+label Math_4
+    push constant 360
+    push argument 0
+    sub
+    push static 0
+    add
+    pop pointer 1
+    push that 0
+    neg
+    return
+function Math.cos 0
+    push argument 0
+    push constant 90
+    add
+    call Math.sin 1
+    return
+function Math.mod 0
+    push argument 0
+    push argument 0
+    push argument 1
+    call Math.divide 2
+    push argument 1
+    call Math.multiply 2
+    sub
+    return

@@ -1,0 +1,11 @@
+class Map {
+    field Array data;
+    field int width;
+    field int height;
+
+    constructor Map new() {
+
+    }
+
+    
+}

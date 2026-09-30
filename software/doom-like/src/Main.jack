@@ -1,0 +1,12 @@
+class Main {
+    function void main() {
+        do Math.init();
+
+        do Output.printInt(Math.sin(0));
+        do Output.printInt(Math.sin(90));
+        do Output.printInt(Math.sin(180));
+        do Output.printInt(Math.cos(0));
+
+        return;
+    }
+}

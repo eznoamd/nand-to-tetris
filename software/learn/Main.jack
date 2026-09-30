@@ -1,0 +1,49 @@
+class Main {
+    function void main() {
+        var boolean run;
+        var char key; 
+        var int x;
+        var int y;
+        var int oldx;
+        var int oldy;
+        var int width;
+        var int vel;
+
+        let run = true;
+        let x = 256;
+        let y = 128;
+        let width = 50;
+        let vel = 1;
+        while(run){
+            let oldx = x;
+            let oldy = y;
+
+            let key = Keyboard.keyPressed();
+            if ((key > 96) & (key < 123)) {
+                let key = key - 32;
+            }
+
+            if(key=87){
+                let y = y - vel;
+            }
+            if(key=65){
+                let x = x - vel;
+            }
+            if(key=83){
+                let y = y + vel;
+            }
+            if(key=68){
+                let x = x + vel;
+            }
+            if(key=80){
+                let run = false;
+            }
+            do Screen.setColor(false);
+            do Screen.drawRectangle(oldx, oldy, (oldx + width), (oldy + width));
+
+            do Screen.setColor(true);
+            do Screen.drawRectangle(x, y, (x + width), (y + width));
+        }
+        return;
+    }
+}

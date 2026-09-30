@@ -1,0 +1,27 @@
+class Player {
+
+    field int x;
+    field int y;
+
+    constructor Player new(int nx, int ny) {
+        let x = nx;
+        let y = ny;
+
+        return this;
+    }
+
+    method void setPosition(int nx, int ny) {
+        let x = nx;
+        let y = ny;
+        return;
+    }
+
+    method Array getPosition() {
+        var Array position;
+        let position = Array.new(2);
+        let position[0] = x;
+        let position[1] = y;
+        return position;
+    }
+
+}

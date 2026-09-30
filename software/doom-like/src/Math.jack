@@ -1,0 +1,143 @@
+//
+//  ANOTAÇÔES: 
+//  
+//  minha inplementação faz com que
+//  1.0 = 256 
+//  0.0 = 0
+//  -1.0 = -256
+//
+//  o mome de dessa implementação é Q8.8,
+//  onde temos 8 bits para a parte inteira
+//  e 8 bits para a parte decimal
+class Math {
+
+    static Array sinTable;
+
+    function void init(){
+        let sinTable = Array.new(91);
+        let sinTable[0] = 0;
+        let sinTable[1] = 4;
+        let sinTable[2] = 9;
+        let sinTable[3] = 13;
+        let sinTable[4] = 18;
+        let sinTable[5] = 22;
+        let sinTable[6] = 27;
+        let sinTable[7] = 31;
+        let sinTable[8] = 36;
+        let sinTable[9] = 40;
+        let sinTable[10] = 44;
+        let sinTable[11] = 49;
+        let sinTable[12] = 53;
+        let sinTable[13] = 58;
+        let sinTable[14] = 62;
+        let sinTable[15] = 66;
+        let sinTable[16] = 71;
+        let sinTable[17] = 75;
+        let sinTable[18] = 79;
+        let sinTable[19] = 83;
+        let sinTable[20] = 88;
+        let sinTable[21] = 92;
+        let sinTable[22] = 96;
+        let sinTable[23] = 100;
+        let sinTable[24] = 104;
+        let sinTable[25] = 108;
+        let sinTable[26] = 112;
+        let sinTable[27] = 116;
+        let sinTable[28] = 120;
+        let sinTable[29] = 124;
+        let sinTable[30] = 128;
+        let sinTable[31] = 132;
+        let sinTable[32] = 136;
+        let sinTable[33] = 139;
+        let sinTable[34] = 143;
+        let sinTable[35] = 147;
+        let sinTable[36] = 150;
+        let sinTable[37] = 154;
+        let sinTable[38] = 158;
+        let sinTable[39] = 161;
+        let sinTable[40] = 165;
+        let sinTable[41] = 168;
+        let sinTable[42] = 171;
+        let sinTable[43] = 175;
+        let sinTable[44] = 178;
+        let sinTable[45] = 181;
+        let sinTable[46] = 184;
+        let sinTable[47] = 187;
+        let sinTable[48] = 190;
+        let sinTable[49] = 193;
+        let sinTable[50] = 196;
+        let sinTable[51] = 199;
+        let sinTable[52] = 202;
+        let sinTable[53] = 204;
+        let sinTable[54] = 207;
+        let sinTable[55] = 210;
+        let sinTable[56] = 212;
+        let sinTable[57] = 215;
+        let sinTable[58] = 217;
+        let sinTable[59] = 219;
+        let sinTable[60] = 222;
+        let sinTable[61] = 224;
+        let sinTable[62] = 226;
+        let sinTable[63] = 228;
+        let sinTable[64] = 230;
+        let sinTable[65] = 232;
+        let sinTable[66] = 234;
+        let sinTable[67] = 236;
+        let sinTable[68] = 237;
+        let sinTable[69] = 239;
+        let sinTable[70] = 241;
+        let sinTable[71] = 242;
+        let sinTable[72] = 243;
+        let sinTable[73] = 245;
+        let sinTable[74] = 246;
+        let sinTable[75] = 247;
+        let sinTable[76] = 248;
+        let sinTable[77] = 249;
+        let sinTable[78] = 250;
+        let sinTable[79] = 251;
+        let sinTable[80] = 252;
+        let sinTable[81] = 253;
+        let sinTable[82] = 254;
+        let sinTable[83] = 254;
+        let sinTable[84] = 255;
+        let sinTable[85] = 255;
+        let sinTable[86] = 255;
+        let sinTable[87] = 256;
+        let sinTable[88] = 256;
+        let sinTable[89] = 256;
+        let sinTable[90] = 256;
+        return;
+    }
+
+    function int sin(int angle) {
+        var int quadrant;
+        var int value;
+
+        // Evita angulos maiores que 360
+        let angle = Math.mod(angle, 360);
+
+        if (angle < 90) {
+            return sinTable[angle];
+        }
+        if (angle < 180) {
+            return sinTable[180 - angle];
+        }
+        if (angle < 270) {
+            return -sinTable[angle - 180];
+        }
+        return -sinTable[360 - angle];
+    }
+
+    function int cos(int angle) {
+        return Math.sin(angle + 90);
+    }
+
+    function int mod(int x, int y) {
+        // x - ((x/y) * y)
+        // 
+        // 380 - (380/360 * 360) 
+        // 380 - (~1 * 360)
+        // = 20  
+        return x - (Math.divide(x,y) * y);
+    }
+}
