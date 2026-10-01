@@ -35,22 +35,22 @@ class Map {
         let data[18] = 0;
         let data[19] = 1;
         let data[20] = 1;
-        let data[21] = 0;
+        let data[21] = 1;
         let data[22] = 0;
-        let data[23] = 0;
-        let data[24] = 0;
-        let data[25] = 0;
+        let data[23] = 1;
+        let data[24] = 1;
+        let data[25] = 1;
         let data[26] = 0;
         let data[27] = 0;
-        let data[28] = 0;
+        let data[28] = 1;
         let data[29] = 1;
         let data[30] = 1;
         let data[31] = 0;
         let data[32] = 0;
         let data[33] = 0;
         let data[34] = 1;
-        let data[35] = 1;
-        let data[36] = 1;
+        let data[35] = 0;
+        let data[36] = 0;
         let data[37] = 0;
         let data[38] = 0;
         let data[39] = 1;
@@ -58,7 +58,7 @@ class Map {
         let data[41] = 0;
         let data[42] = 0;
         let data[43] = 0;
-        let data[44] = 0;
+        let data[44] = 1;
         let data[45] = 0;
         let data[46] = 0;
         let data[47] = 0;
@@ -74,29 +74,21 @@ class Map {
         let data[57] = 1;
         let data[58] = 1;
         let data[59] = 1;
-        let playerStartX = 4;
-        let playerStartY = 2;
+        let playerStartX = 2;
+        let playerStartY = 4;   
+
         return this;
     }
 
+    // pega o valor do x e y dentro de data
     method int get(int x, int y) {
         return data[(y * width) + x];
     }
 
+    // verifica se esta dentro do mapa
     method boolean isInside(int x, int y) {
-        if (x < 0) {
-            return false;
-        }
-        
-        if (~(x < width)) { // ~(a<b) é a>=b
-            return false;
-        }
-
-        if (y < 0) {
-            return false;
-        }
-
-        if (~(y < height)) { // ~(a<b) é a>=b
+        // ~(a<b) é a>=b
+        if ((x < 0)|~(x < width)|(y < 0)|~(y < height)) {
             return false;
         }
 
@@ -104,11 +96,14 @@ class Map {
     }
 
     method boolean isWall(int x, int y) {
-        if (x < 0 | ~(x < width) | y < 0 | ~(y < height)) {
+        // qualquer localização fora do mapa é considerada
+        // "parede" pois assim se torna inacessivel
+        if (~isInside(x, y)) {
             return true;
         }
 
-        return ~(get(x, y) = 0);
+        // se a posição é 1 então retorna que é parede
+        return (get(x, y) = 1);
     }
 
     method int getWidth() {

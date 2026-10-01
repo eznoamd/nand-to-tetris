@@ -1,20 +1,33 @@
 class Renderer {
 
     field Raycaster raycaster;
+
     field int FOV;
+    field int screenWidth;
+    field int numRays;
+    field int rayWidth;
+
 
     constructor Renderer new(Raycaster nraycaster) {
         let raycaster = nraycaster;
-        let FOV = 64;
+
+        let FOV = 64; // angulo de visão do player
+        let screenWidth = 512; // tamanho da tela (fixo no nand2tetris)
+        let numRays = 64; // numero de raios/colunas na tela
+        let rayWidth = screenWidth / numRays; // tamanho de cada coluna com base na quantidade de raios
+
         return this;
     }
 
 
     method void render(Player player) {
-        var int ray;
-        var int rayAngle;
-        var int distanceFixed;
-        var int wallHeight;
+        var int ray; // contador de raios
+
+        var int rayAngle;    // angulo absoluto do raio no mundo
+        var int angleOffset; // quanto o raio esta deslocado em relação a camera 
+
+        var int distanceFixed; // recebe a distancia do raycast
+        var int wallHeight;    // altura da coluna  
 
         var int x;
         var int top;
@@ -25,72 +38,77 @@ class Renderer {
         do Screen.clearScreen();
         do Screen.setColor(true);
 
-        while (ray < FOV) {
+        // enquanto não tivermos printado todos os raios
+        while (ray < numRays) { 
+            // isso seria os graus de diferença * o raio atual
+            // offset = raio atual * FOV / raios totais
+            let angleOffset = Math.divide(ray * FOV, numRays);
 
-            // FOV = 64 graus
-            //
-            // raio 0  = playerAngle - 32
-            // raio 32 = playerAngle
-            // raio 63 = playerAngle + 31
+            // desloca pra esquerda o offset com base na metade do FOV 
+            let angleOffset = angleOffset - (FOV / 2);
 
-            let rayAngle = (player.getAngle() - (FOV/2)) + ray;
+            // aplica isso em cima do angulo do player 
+            let rayAngle = player.getAngle() + angleOffset;
 
-            // Normaliza o ângulo para 0..359
-            if (rayAngle < 0) {
+            while (rayAngle < 0) { // corrige angulos menores que 0
                 let rayAngle = rayAngle + 360;
             }
 
-            if (~(rayAngle < 360)) {
+            while (~(rayAngle < 360)) { // corrige angulos maiores que 360
                 let rayAngle = rayAngle - 360;
             }
 
-            // Faz o raycast
+            // aplica o cast desse raio com base na posição do player
+            // detalhes sobre o cast ver em ./Raycaster.jack
             let distanceFixed = raycaster.castRay(
                 player.getXFixed(),
                 player.getYFixed(),
                 rayAngle
             );
 
-            // Evita divisão por zero
             if (distanceFixed < 1) {
+                // evita possiveis problemas de paredes extremamente grandes
+                // por erros de divisão dos Fixed ou de paredes muito próximas do player
                 let distanceFixed = 1;
             }
 
-            // Quanto menor a distância,
-            // maior a parede.
-            //
-            // 25600 / distância
-            //
-            // 25600 é apenas uma escala visual.
-            let wallHeight = Math.divide(
-                25600,
-                distanceFixed
-            );
+            // divide uma altura pela distancia
+            // distancias muito grandes tendem a resultarem em heights menores
+            // distancias muito pequenas tendem a resultarem em heights maiores 
+            // a escolha para 25600 se deve ao fato de 100*256 / distance*256 = non fixed
+            // poderia ser escolhido outros valores que mudariam a escala das paredes na tela
+            // mas 25600 funciona bem com os valores retornados pelo distanceFixed
+            let wallHeight = Math.divide(25600, distanceFixed);
 
-            // Limita à altura da tela
             if (wallHeight > 256) {
+                // limita a altura a somente 256 (altura da tela)
                 let wallHeight = 256;
             }
 
-            // Centro vertical da tela = 128
+            // centro da tela - metade da altura da parede
             let top = 128 - (wallHeight / 2);
+
+            // centro da tela + metade da altura da parede
             let bottom = 128 + (wallHeight / 2);
 
             if (top < 0) {
+                // evita tentar desenhar algo fora da tela 
                 let top = 0;
             }
 
             if (bottom > 255) {
+                // evita tentar desenhar algo fora da tela 
                 let bottom = 255;
             }
+            
+            // x = raio atual * o tamanho de cada coluna na tela
+            let x = ray * rayWidth;
 
-            // Cada raio ocupa 8 pixels
-            let x = ray * 8;
 
             do Screen.drawRectangle(
                 x,
                 top,
-                x + 7,
+                x + rayWidth - 1,
                 bottom
             );
 

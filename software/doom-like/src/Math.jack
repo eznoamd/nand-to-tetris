@@ -113,7 +113,7 @@ class Math {
         var int quadrant;
         var int value;
 
-        // Evita angulos maiores que 360
+        // normaliza o angulo
         let angle = Math.mod(angle, 360);
 
         if (angle < 90) {

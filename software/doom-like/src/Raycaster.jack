@@ -7,19 +7,19 @@ class Raycaster {
     }
 
     method int castRay(int pxFixed, int pyFixed, int angle) {
-        var int rayXFixed;
-        var int rayYFixed;
-        var int mapX;
-        var int mapY;
-        var int deltaXFixed;
-        var int deltaYFixed;
-        var int stepX;
-        var int stepY;
-        var int sideDistX;
-        var int sideDistY;
-        var boolean hit;
-        var int side;
-        var int perpWallDist;
+        var int rayXFixed; // variação do raio com base no angulo em x
+        var int rayYFixed; // variação do raio com base no angulo em y
+        var int mapX; // tile do mapa que esta o player em x
+        var int mapY; // tile do mapa que esta o player em y
+        var int deltaXFixed; // distancia necessaria para atravessar uma célula em x
+        var int deltaYFixed; // distancia necessaria para atravessar uma célula em y
+        var int stepX; // 1 é pra direita, -1 é pra esquerda, 0 é caso não tenha variação em x
+        var int stepY; // 1 é pra baixo, -1 é pra cima, 0 é caso não tenha variação em y
+        var int sideDistX; // distancia até o proximo tile com base no player em x 
+        var int sideDistY; // distancia até o proximo tile com base no player em y
+        var boolean hit; // variavel de controle se encontrou parede ou não
+        var int side; // guarda em que tipo de parede o raio bateu, 1 = horizontal(y) e 0 = vertical(x)
+        var int perpWallDist; // distancia até a parede
 
         let rayXFixed = Math.cos(angle);
         let rayYFixed = Math.sin(angle);
@@ -27,96 +27,107 @@ class Raycaster {
         let mapX = pxFixed / 256;
         let mapY = pyFixed / 256;
 
-        // Distância necessária para atravessar
-        // uma célula no eixo X/Y.
         if (rayXFixed = 0) {
+            // evita uma divisão por 0 colocando o int maximo fixed
             let deltaXFixed = 32767;
         } else {
+            // deltaX = 1 / rayX 
             let deltaXFixed = Math.abs(Math.fixedDiv(256, rayXFixed));
         }
 
         if (rayYFixed = 0) {
+            // evita uma divisão por 0 colocando o int maximo fixed
             let deltaYFixed = 32767;
         } else {
+            // deltaT = 1 / rayY
             let deltaYFixed = Math.abs(Math.fixedDiv(256, rayYFixed));
         }
 
-        // Direção X
-        if (rayXFixed = 0) {
+        //
+        // Direção X:
+        if (rayXFixed = 0) { 
+            // se a variação de x = 0
+            // então ele não troca de tile x em nenhum momento
+            // e a distancia até a proxima grade da tile tende a infinito 
+            // no nosso caso é o int maximo
             let stepX = 0;
             let sideDistX = 32767;
         } else {
-
             if (rayXFixed < 0) {
+                // se a variação de x < 0 
+                // então ele vai para os tiles da esquerda (stepX = -1)
+                // e a distancia até a proxima grade da tile é dada por:
+                //
+                // playerX - tileX / |variação de X do raio|
+                //
                 let stepX = -1;
-
-                let sideDistX = Math.fixedDiv(
-                    pxFixed - (mapX * 256),
-                    Math.abs(rayXFixed)
-                );
-
+                let sideDistX = Math.fixedDiv(pxFixed - (mapX * 256), Math.abs(rayXFixed));
             } else {
+                // se a variação de x > 0 
+                // então ele vai para os tiles da direita (stepX = 1)
+                // e a distancia até a proxima grade da tile é dada por:
+                //
+                // tileX - playerX / |variação de X do raio|
+                //
                 let stepX = 1;
-
-                let sideDistX = Math.fixedDiv(
-                    ((mapX + 1) * 256) - pxFixed,
-                    Math.abs(rayXFixed)
-                );
+                let sideDistX = Math.fixedDiv(((mapX + 1) * 256) - pxFixed,Math.abs(rayXFixed));
             }
-}
+        }
 
-        // Direção Y
+        //
+        // Direção Y:
+        // vou omitir os comentarios para Y pois são 
+        // os equivalentes de X com as variaveis trocadas
         if (rayYFixed = 0) {
-
             let stepY = 0;
             let sideDistY = 32767;
-
         } else {
-
             if (rayYFixed < 0) {
                 let stepY = -1;
-
-                let sideDistY = Math.fixedDiv(
-                    pyFixed - (mapY * 256),
-                    Math.abs(rayYFixed)
-                );
-
+                let sideDistY = Math.fixedDiv(pyFixed - (mapY * 256),Math.abs(rayYFixed));
             } else {
                 let stepY = 1;
-
-                let sideDistY = Math.fixedDiv(
-                    ((mapY + 1) * 256) - pyFixed,
-                    Math.abs(rayYFixed)
-                );
+                let sideDistY = Math.fixedDiv(((mapY + 1) * 256) - pyFixed,Math.abs(rayYFixed));
             }
         }
 
         let hit = false;
         let side = 0;
 
+        // enquanto não bateu em algo
         while (~hit) {
-
             if (sideDistX < sideDistY) {
+                // se o proxima grade de tile vai ser uma em x:
+                // aumenta a distancia com base do deltaX pra próxima grade em x
+                // da um passo no mapa em x 
                 let sideDistX = sideDistX + deltaXFixed;
                 let mapX = mapX + stepX;
                 let side = 0;
             } else {
+                // se o proxima grade de tile vai ser uma em y:
+                // aumenta a distancia com base do deltaY pra próxima grade em y
+                // da um passo no mapa em y 
                 let sideDistY = sideDistY + deltaYFixed;
                 let mapY = mapY + stepY;
                 let side = 1;
             }
 
+            // verifica com base nos passos que demos até agora no mapa se
+            // onde estamos é uma parede, logo então hit = true
             if (map.isWall(mapX, mapY)) {
                 let hit = true;
             }
         }
 
         if (side = 0) {
+            // se bateu em uma parede vertical 
+            // guardamos a distancia de nós até a parede com base em x
             let perpWallDist = sideDistX - deltaXFixed;
         } else {
+            // se bateu em uma parede horizontal
+            // guardamos a distancia de nós até a parede com base em y
             let perpWallDist = sideDistY - deltaYFixed;
         }
-
         return perpWallDist;
     }
 }

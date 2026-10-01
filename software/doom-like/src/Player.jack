@@ -10,11 +10,16 @@ class Player {
     constructor Player new(Map nmap) {
         let map = nmap;
 
-        let xFixed = map.getPlayerStartX() * 256;
-        let yFixed = map.getPlayerStartY() * 256;
-        let angle = 270;
-        let velocityFixed = 64;
-        let velRot = 10;
+        let xFixed = map.getPlayerStartX() * 256; // o mapa tem o spawpoint do player
+        let yFixed = map.getPlayerStartY() * 256; // aqui apenas transformamos em Fixed
+        
+        //
+        // ATEÇÃO
+        // as seguintes variaveis podem ser modificadas
+        // para mudar sua esperiencia em jogo
+        let angle = 270; // angulo inicial do player 
+        let velocityFixed = 64; // velocidade em Fixed, 64 = 0.25 tiles por loop
+        let velRot = 10; // velocidade de rotação, 10 = 10⁰ por loop
 
         return this;
     }
@@ -48,7 +53,7 @@ class Player {
         let newXFixed = xFixed + dxFixed;
         let newYFixed = yFixed + dyFixed;
 
-        // se não é parede a nova posição
+        // se a nova posição não é parede
         // efetua o movimento
         if (~map.isWall(newXFixed / 256, yFixed / 256)) {
             let xFixed = newXFixed;
@@ -59,43 +64,50 @@ class Player {
         return;
     }
 
+    // Mover para frente 
     method void moveForward() {
         do move(angle);
         return;
     }
 
-   method void moveBackward() {
+    // Mover para trás 
+    method void moveBackward() {
         do move(angle + 180);
         return;
     }
 
+    // Mover para esquerda
     method void moveLeft() {
         do move(angle - 90);
         return;
     }
 
+    // Mover para direita
     method void moveRight() {
         do move(angle + 90);
         return;
     }
 
-    method void rotateLeft() {
-        let angle = angle - velRot;
+    // metodo que centraliza a lógica de rotação do angulo do player
+    // -1 = Left
+    // 1 = Right
+    method void rotate(int dir) {
+        let angle = angle + (dir * velRot);
 
-        if (angle < 0) {
-            let angle = angle + 360;
+        if (angle < 0 | angle > 359) {
+            let angle = angle - (dir * 360);
         }
 
         return;
     }
 
+    method void rotateLeft() {
+        do rotate(-1);
+        return;
+    }
+
     method void rotateRight() {
-        let angle = angle + velRot;
-
-        if (angle > 359) {
-            let angle = angle - 360;
-        }
-
+        do rotate(1);
         return;
     }
 

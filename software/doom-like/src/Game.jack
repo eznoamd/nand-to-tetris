@@ -8,6 +8,9 @@ class Game {
 
     field boolean running;
 
+    // Cria o objeto de player
+    // Cria o objeto que trabalha com raycast
+    // Cria o objeto para delegar a rederização
     constructor Game new() {
         let map = Map.new();
         let player = Player.new(map);
@@ -18,66 +21,70 @@ class Game {
         return this;
     }
 
+    // Loop principal da aplicação
     method void run() {
+        // variavel que generaliza qualquer ação que possa influenciar no render
         var boolean changed;
+        // render inicial, quando entrar no loop ele ira esperar alguma ação do usuario
         do render();
         while (running) {
             let changed = update();
+            // apenas executa o render se houver alguma ação
             if (changed) {
                 do render();
             }
-
+            // evita desperdiçar processamento principalmente quando não há render
             do Sys.wait(30);
         }
-
         return;
     }
 
-
+    // metodo geral para ler as ações do usuario
+    // se tecla 'X' -> delega para a ação correspondente de 'X' do player
+    // e seta changed = true para ocorrer uma nova render no loop da run()
     method boolean update() {
         var int key;
-
         let key = Keyboard.keyPressed();
         let changed = false;
 
-        if (key = 119) {
+        if (key = 119) { // w
             do player.moveForward();
             let changed = true;
         }
 
-        if (key = 115) {
+        if (key = 115) { // s
             do player.moveBackward();
             let changed = true;
         }
 
-        if (key = 97) {
+        if (key = 97) { // a
             do player.moveLeft();
             let changed = true;
         }
 
-        if (key = 100) {
+        if (key = 100) { // d
             do player.moveRight();
             let changed = true;
         }
 
-        if (key = 130) {
+        if (key = 130) { // <-
             do player.rotateLeft();
             let changed = true;
         }
 
-        if (key = 132) {
+        if (key = 132) { // ->
             do player.rotateRight();
             let changed = true;
         }
 
-        if (key = 27) {
+        if (key = 27) { // esc
             let running = false;
         }
 
         return changed;
     }
 
-
+    // interface para renderer.render(...)
     method void render() {
         do renderer.render(player);
         return;
