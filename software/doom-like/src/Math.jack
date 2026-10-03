@@ -233,11 +233,23 @@ class Math {
 
 
     function int mod(int x, int y) {
+        var int result;
+
         // x - ((x/y) * y)
-        // 
-        // 380 - (380/360 * 360) 
+        //
+        // 380 - (380/360 * 360)
         // 380 - (~1 * 360)
-        // = 20  
-        return x - (Math.divide(x,y) * y);
+        // = 20
+        let result = x - (Math.divide(x,y) * y);
+
+        // a divisão arredonda para zero, então x negativo dá resto negativo:
+        // -30 - (0 * 360) = -30
+        // somando y o resto fica entre 0 e y-1 (-30 -> 330),
+        // senão o sin/cos lê fora da sinTable
+        if (result < 0) {
+            let result = result + y;
+        }
+
+        return result;
     }
 }

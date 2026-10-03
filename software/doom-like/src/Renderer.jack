@@ -35,8 +35,9 @@ class Renderer {
 
         let ray = 0;
 
-        do Screen.clearScreen();
-        do Screen.setColor(true);
+        // a tela não é limpa antes: cada coluna desenha teto, parede e chão,
+        // então cada pixel vai direto do quadro anterior para o novo
+        // (limpar e redesenhar fazia a tela piscar em branco)
 
         // enquanto não tivermos printado todos os raios
         while (ray < numRays) { 
@@ -104,13 +105,37 @@ class Renderer {
             // x = raio atual * o tamanho de cada coluna na tela
             let x = ray * rayWidth;
 
+            // teto (branco), só se a parede não começar no topo da tela:
+            // drawRectangle com y2 < y1 é erro no SO do nand2tetris
+            if (top > 0) {
+                do Screen.setColor(false);
+                do Screen.drawRectangle(
+                    x,
+                    0,
+                    x + rayWidth - 1,
+                    top - 1
+                );
+            }
 
+            // parede (preto)
+            do Screen.setColor(true);
             do Screen.drawRectangle(
                 x,
                 top,
                 x + rayWidth - 1,
                 bottom
             );
+
+            // chão (branco), só se a parede não terminar no fim da tela
+            if (bottom < 255) {
+                do Screen.setColor(false);
+                do Screen.drawRectangle(
+                    x,
+                    bottom + 1,
+                    x + rayWidth - 1,
+                    255
+                );
+            }
 
             let ray = ray + 1;
         }
